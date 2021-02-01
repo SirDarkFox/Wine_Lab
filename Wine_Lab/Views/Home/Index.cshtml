@@ -1,0 +1,177 @@
+﻿@using Wine_Lab.Data.Models
+@model IEnumerable<Article>
+
+
+@{
+    ViewData["Title"] = "Home | WineLab";
+}
+
+<div>
+    <button class="btn-to-top" title="Вернуться наверх">
+        <i class="fas fa-chevron-up chev"></i>
+    </button>
+
+    <div class="intro page">
+        <canvas id="canvas1"></canvas>
+        @*Нет картинки*@
+        <img src="~/img/lab2.jpg" class="img-bg" data-speed="0.4" alt="" />
+        @*Нет картинки*@
+        <div class="intro-container">
+            <div class="intro-content">
+                <h1 class="intro-title">
+                    испытательная лаборатория
+                    <div class="border"></div>
+                </h1>
+                <p class="intro-text">
+                    лидер на рынке исследований и испытаний продукции
+                </p>
+            </div>
+            <div class="intro-side">
+                <ul>
+                    <li class="intro-data">
+                        <span class="flex-data">
+                            320
+                        </span>
+                        <p>высококвалифицированных сотрудников</p>
+                    </li>
+                    <li class="intro-data">
+                        <span class="flex-data">
+                            2000
+                        </span>
+                        <p>единиц современного оборудования</p>
+                    </li>
+                    <li class="intro-data">
+                        <span class="flex-data">
+                            6800
+                        </span>
+                        <p>площадь лаборатории</p>
+                    </li>
+                </ul>
+
+            </div>
+        </div>
+    </div>
+
+    <div class="about page">
+        <div class="about-container opacity">
+            <div class="about-left">
+                <h2 class="about-title">О лаборатории</h2>
+                <div class="about-content">
+                    <p class="about-text">
+                        Наша лаборатория проводит научные исследования в области производства плодовой и ягодной продукции, винограда и виноделия, хранения и переработки плодов и ягод, организации научно-технической деятельности и экономики. Приоритетными направлениями исследований являются организация и совершенствование селекционного процесса, создание сортов плодовых, ягодных, орехоплодных, цветочно-декоративных, овощных, субтропических культур и винограда с заданными хозяйственно-ценными признаками.
+                    </p>
+                </div>
+            </div>
+            <div class="about-right">
+                <div id="yMapsID"></div>
+                <script type="text/javascript">
+                    ymaps.ready(function () {
+                        var myMap = new ymaps.Map("yMapsID", {
+                            center: [45.048641, 39.002433],
+                            zoom: 16
+                        });
+
+                        var myPlacemark = new ymaps.Placemark([45.048758, 39.002503], {
+                            hintContent: 'Это мы!'
+                        });
+
+                        myMap.geoObjects.add(myPlacemark);
+                    });
+                </script>
+            </div>
+        </div>
+    </div>
+
+    <div class="product page">
+        <h2 class="product-title clr-white">Наша продукция</h2>
+        <!-- <div class="slider-bg">
+            <img src="/static/img/grape1.jpg" alt="" class="sl-img-bg">
+            <img src="/static/img/grape2.jpg" alt="" class="sl-img-bg">
+            <img src="/static/img/grape3.jpg" alt="" class="sl-img-bg">
+            <img src="/static/img/wine2.jpg" alt="" class="sl-img-bg">
+        </div> -->
+        <div class="slider-container">
+            <div>
+                <div>
+                    <div class="slider">
+                        @*Нет картинки*@
+                        <div class="slider-img" id="last">
+                            <img src="~/img/wine2.jpg" alt="" />
+                        </div>
+                        <div class="slider-img">
+                            <img src="~/img/grape1.jpg" alt="" />
+                        </div>
+                        <div class="slider-img">
+                            <img src="~/img/grape2.jpg" alt="" />
+                        </div>
+                        <div class="slider-img">
+                            <img src="~/img/grape3.jpg" alt="" />
+                        </div>
+                        <div class="slider-img">
+                            <img src="~/img/wine2.jpg" alt="" />
+                        </div>
+                        <div class="slider-img" id="first">
+                            <img src="~/img/grape1.jpg" alt="" />
+                        </div>
+                        @*Нет картинки*@
+                    </div>
+                </div>
+            </div>
+            <div class="slider-content">
+                <button class="btn-slider" id="prev">
+                    <i class="fas fa-chevron-left" id="btn-chevs"></i>
+                </button>
+                <button class="btn-slider" id="next">
+                    <i class="fas fa-chevron-right" id="btn-chevs"></i>
+                </button>
+                <ul class="slider-ul">
+                    <li class="slider-li option" option-index="0"></li>
+                    <li class="slider-li option" option-index="1"></li>
+                    <li class="slider-li option" option-index="2"></li>
+                    <li class="slider-li option" option-index="3"></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <div class="lastnews page">
+        <h2 class="title clr-main">Последние новости</h2>
+        @if (!Model.Any())
+        {
+            <h2>На данный момент новостей нет!</h2>
+        }
+        else
+        {
+            <div class="lastnews-container">
+                <div class="lastnews-content">
+                    @foreach (var article in Model)
+                    {
+                        <a asp-controller="Article" asp-action="Detail" asp-route-id="@article.Id">
+                            <img src="@article.ImgPath" class="lastnews-img">
+                            <div class="lastnews-info">
+                                <h2>@article.Title</h2>
+                                @*<p th:text="${article.lastUpdate}" class="date mb-2">20.04.2020</p>*@
+                                <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ea earum obcaecati quae, quas repellat vero. Consequuntur dolores ducimus exercitationem modi odit praesentium quaerat quos! Animi cum earum odit ratione recusandae.</p>
+                            </div>
+                        </a>
+                    }
+                </div>
+            </div>
+        }
+    </div>
+
+    <!--    <div class="page">-->
+    <!--        <h2>Unfinished style</h2>-->
+    <!--        <div class="glow-container">-->
+    <!--            <div class="glow-content">-->
+    <!--                <div class="glow-img">-->
+    <!--                    <img src="/static/img/grape2.jpg" class="gl-img" alt="">-->
+    <!--                </div>-->
+    <!--                <div class="glow-info">-->
+    <!--                    <p class="glow-text">Lorem ipsum dolor sit amet consectetur adipisicing elit. Impedit sit et suscipit illo aut explicabo officia. Molestiae quis nam unde voluptatem modi qui, totam, illo quisquam tempora quo illum repellendus! Lorem ipsum dolor sit amet consectetur, adipisicing elit. Doloribus rem iusto eos nihil dolores provident, temporibus voluptas minima ipsam numquam at. Explicabo blanditiis, perferendis ullam minus velit labore. Natus, sint.</p>-->
+    <!--                    &lt;!&ndash; <img class="glow-img" src="img/grape1.jpg" alt=""> &ndash;&gt;-->
+    <!--                </div>-->
+    <!--            </div>-->
+    <!--        </div>-->
+    <!--    </div>-->
+</div>

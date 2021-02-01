@@ -1,0 +1,49 @@
+﻿@using Wine_Lab.Data.Models
+@model List<Article>
+
+@{
+    ViewData["Title"] = "Новости | WineLab";
+}
+
+<div layout:fragment="content">
+    <div class="p-2 m-5">
+        <div class="text-center mb-3">
+            <h1 class="about-title">Новости</h1>
+        </div>
+        <div sec:authorize="isAuthenticated()">
+            <div class="d-flex justify-content-center">
+                <a href="/news/add" class="btn btn-primary mb-4">Добавить</a>
+            </div>
+        </div>
+        <div class="row">
+
+
+            <div class="col-lg-4 col-md-12 mb-4">
+                @foreach (var article in Model)
+                {
+                    <a asp-controller="Article" asp-action="Details" asp-route-id="@article.Id">
+                        <div class="jumbotron justify-content-center">
+                            <p class="text-center font-weight-bold clr-main" style="font-size: 2rem;">@article.Title</p>
+                            <img src="@article.ImgPath" class="img-fluid mb-4">
+                            @if (User.Identity.IsAuthenticated && User.IsInRole("Admin"))
+                            {
+                                <div class="d-flex justify-content-end">
+                                    <form asp-controller="Article" asp-action="Delete" method="post">
+                                        <input type="hidden" name="articleId" value="@article.Id"/>
+                                        <button onclick="alert('Вы действительно хотите удалить данную статью?')"
+                                                class="btn btn-danger" type="submit">
+                                            Удалить
+                                        </button>
+                                        <a asp-controller="Article" asp-action="Edit" asp-route-id="@article.Id" class="btn btn-success">Изменить</a>
+                                    </form>
+                                </div>
+                            }
+                        </div>
+                    </a>
+                }
+            </div>
+
+
+        </div>
+    </div>
+</div>

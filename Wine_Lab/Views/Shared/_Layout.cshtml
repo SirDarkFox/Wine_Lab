@@ -1,0 +1,157 @@
+﻿@using Microsoft.AspNetCore.Identity
+@using Wine_Lab.Data.Models
+@inject UserManager<User> UserManager
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"]</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="/static/css/style.css">
+    @*wtf is this???*@
+    <link rel="stylesheet"
+          href="https://pro.fontawesome.com/releases/v5.10.0/css/all.css"
+          integrity="sha384-AYmEC3Yw5cVb3ZcuHtOA93w35dYTsvhLPVnYs9eStHfGJvOvKxVfELGroGkvsg+p"
+          crossorigin="anonymous" />
+    @*wtf is this???*@
+    <link href="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote-bs4.min.css" rel="stylesheet">
+</head>
+<body>
+    <header class="custom-header">
+        <div class="custom-nav-container h-100">
+            <input type="checkbox" id="check">
+            <div class="custom-logo-container">
+                <a asp-controller="Home" asp-action="Index" class="custom-logo text-decoration-none">Wine<span>Lab</span></a>
+            </div>
+            <div class="custom-nav-btn">
+                <div class="custom-nav-links">
+                    <ul>
+                        <li class="custom-nav-link" style="--i: .6s">
+                            <a asp-controller="Home" asp-action="Index" asp-fragment="about" class="text-decoration-none">лаборатория</a>
+                        </li>
+                        <li class="custom-nav-link" style="--i: .8s">
+                            <a asp-controller="Regulation" asp-action="Index" class="text-decoration-none">регламенты</a>
+                        </li>
+                        <li class="custom-nav-link" style="--i: .4s">
+                            <a asp-controller="Article" asp-action="Index" class="text-decoration-none">новости</a>
+                        </li>
+                        <li class="custom-nav-link" style="--i: 1s">
+                            <a asp-controller="Home" asp-action="Index" asp-fragment="contacts" class="text-decoration-none">контакты</a>
+                        </li>
+                    </ul>
+                </div>
+                <!--            <div sec:authorize="isAuthenticated()" class="nav-item active">-->
+                <!--                <text class="nav-link">Привет, <span sec:authentication="name"></span></text>-->
+                <!--            </div>-->
+                <form asp-controller="Admin" asp-action="Logout" method="post" class="custom-log-sign" style="--i: 1.2">
+                    @if (User.Identity.IsAuthenticated && User.IsInRole("Admin"))
+                    {
+                        <input type="hidden" name="UserId" value="@UserManager.GetUserId(User)" />
+                        <button class="custom-btn-admin transparent" type="submit">Выйти</button>
+                    }
+                    else
+                    {
+                        <button asp-controller="Admin" asp-action="Login" class="custom-btn-admin transparent" type="submit">Админка</button>
+                    }
+                </form>
+            </div>
+            <div class="custom-hamburger-menu-container">
+                <div class="custom-hamburger-menu">
+                    <div></div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <div>
+        @RenderBody()
+    </div>
+
+    <footer id="contacts">
+        <div class="main-content">
+            <div class="left box">
+                <h3>Wine<span style="font-weight: 400;">Lab</span></h3>
+                <div class="content">
+                    <p>
+                        Наша лаборатория проводит научные исследования в области производства плодовой и ягодной продукции, винограда и виноделия, хранения и переработки плодов и ягод, организации научно-технической деятельности и экономики.
+                    </p>
+                    <div class="social">
+                        <a href="#"><span class="fab fa-vk"></span></a>
+                        <a href="#"><span class="fab fa-twitter"></span></a>
+                        <a href="#"><span class="fab fa-instagram"></span></a>
+                        <a href="#"><span class="fab fa-youtube"></span></a>
+                    </div>
+                </div>
+            </div>
+            <div class="center box">
+                <h2>
+                    Контакты
+                </h2>
+                <div class="content">
+                    <div class="place">
+                        <span class="fas fa-map-marker-alt"></span>
+                        <span class="text">Краснодар, ул. Московская 2а</span>
+                    </div>
+                    <div class="phone">
+                        <span class="fas fa-phone-alt"></span>
+                        <span class="text">+7(961)322-14-88</span>
+                    </div>
+                    <div class="email">
+                        <span class="fas fa-envelope"></span>
+                        <span class="text">abc@example.com</span>
+                    </div>
+                </div>
+            </div>
+            <div class="right box">
+                <h2>
+                    Написать нам
+                </h2>
+                <div class="content">
+                    <form action="#">
+                        <div class="email">
+                            <div class="text">
+                                Email
+                            </div>
+                            <input type="email" required>
+                        </div>
+                        <div class="msg">
+                            <div class="text">
+                                Сообщение
+                            </div>
+                            <input type="email" required>
+                            <br />
+                            <div class="custom-btn">
+                                <button type="submit">Отправить</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+        <div class="bottom">
+            <center>
+                <span class="credit">
+                    WineLab 2020
+                    </a> |
+                </span>
+                <span class="far fa-copyright"></span>
+                2020 Все права защищены.
+            </center>
+        </div>
+    </footer>
+
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="/static/scripts/main.js"></script>
+    <script src="/static/scripts/slider.js"></script>
+    <script src="/static/scripts/particles.js"></script>
+    <script src="https://api-maps.yandex.ru/2.1/?apikey=ваш API-ключ&lang=ru_RU"
+            type="text/javascript">
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote-bs4.min.js"></script>
+    @RenderSection("Scripts", required: false)
+</body>
+</html>

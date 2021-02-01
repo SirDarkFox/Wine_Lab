@@ -1,0 +1,133 @@
+﻿@using Wine_Lab.ViewModels.Regulation
+@model RegulationIndexViewModel
+
+@{
+    ViewData["Title"] = "Регламенты | WineLab";
+}
+
+
+<div class="page">
+    <div class="container">
+        <div class="row d-flex justify-content-center">
+            <h1 class="reg-header">Регламенты и ГОСТы</h1>
+        </div>
+        <div class="row mt-5">
+            <div class="col">
+                <nav class="d-flex flex-column overflow-auto nav-regs reg-scrollbar-main">
+
+                    <div class="nav-reg">
+
+                        @foreach (var regulation in Model.Regulations)
+                        {
+                            <a asp-controller="Regulation" asp-action="Index" asp-route-id="@regulation.Id" class="nav-reg-content text-decoration-none">
+                                <h5>&laquo;@regulation.Title&raquo;</h5>
+                            </a>
+
+                            @if (User.Identity.IsAuthenticated && User.IsInRole("Admin"))
+                            {
+                                <div class="float-right mb-3 mr-3">
+                                    <a asp-controller="Regulation" asp-action="Edit" asp-route-id="@regulation.Id" class="mr-3">Редактировать</a>
+                                    <a asp-controller="Regulation" asp-action="Delete" asp-route-id="@regulation.Id">Удалить</a>
+                                </div>
+                            }
+
+                        }
+                    </div>
+
+                    <!--                    <a href="regulations/1" class="nav-reg text-decoration-none">-->
+                    <!--                        <h5 class="card-title">&laquo;О безопасности упаковки&raquo;</h5>-->
+                    <!--                        <a href="#">Редактировать</a>-->
+                    <!--                    </a>-->
+                    <!--                    <a href="regulations/1" class="nav-reg text-decoration-none">-->
+                    <!--                        <h5 class="card-title">&laquo;О безопасности вскрытия&raquo;</h5>-->
+                    <!--                    </a>-->
+                    <!--                    <a href="regulations/1" class="nav-reg text-decoration-none">-->
+                    <!--                        <h5 class="card-title">&laquo;О безопасности открытия&raquo;</h5>-->
+                    <!--                    </a>-->
+                    <!--                    <a href="regulations/1" class="nav-reg text-decoration-none">-->
+                    <!--                        <h5 class="card-title">&laquo;О безопасности закрытия&raquo;</h5>-->
+                    <!--                    </a>-->
+                    <!--                    <a href="regulations/1" class="nav-reg text-decoration-none">-->
+                    <!--                        <h5 class="card-title">&laquo;О безопасности упаковки&raquo;</h5>-->
+                    <!--                    </a>-->
+                    <!--                    <a href="regulations/1" class="nav-reg text-decoration-none">-->
+                    <!--                        <h5 class="card-title">&laquo;О безопасности упаковки&raquo;</h5>-->
+                    <!--                    </a>-->
+                    <!--                    <a href="regulations/1" class="nav-reg text-decoration-none">-->
+                    <!--                        <h5 class="card-title">&laquo;О безопасности вскрытия&raquo;</h5>-->
+                    <!--                    </a>-->
+                    <!--                    <a href="regulations/1" class="nav-reg text-decoration-none">-->
+                    <!--                        <h5 class="card-title">&laquo;О безопасности открытия&raquo;</h5>-->
+                    <!--                    </a>-->
+                    <!--                    <a href="regulations/1" class="nav-reg text-decoration-none">-->
+                    <!--                        <h5 class="card-title">&laquo;О безопасности закрытия&raquo;</h5>-->
+                    <!--                    </a>-->
+                    <!--                    <a href="regulations/1" class="nav-reg text-decoration-none">-->
+                    <!--                        <h5 class="card-title">&laquo;О безопасности упаковки&raquo;</h5>-->
+                    <!--                    </a>-->
+                </nav>
+            </div>
+            <div class="col-md-8">
+                @if (User.Identity.IsAuthenticated && User.IsInRole("Admin"))
+                {
+                    @*<form asp-controller="Regulation" asp-action="Edit" method="post">
+
+                        <div class="form-group">
+                            <label for="title">Название:</label>
+                            <input type="text" id="title" placeholder="Title" autocomplete="off" class="form-control"
+                                   th:field="*{title}" />
+                        </div>
+
+                        <div class="form-group">
+                            <label for="content">Текст:</label>
+                            <textarea type="text" rows="4" id="content" placeholder="Content" class="form-control"
+                                      th:field="*{content}" autocomplete="off"></textarea>
+                        </div>
+
+                        <input type="hidden" name="name" value="" />
+
+                        <button class="btn btn-primary" type="submit">Изменить</button>
+                    </form>*@
+                }
+                else
+                {
+                    <div class="chosen-reg-body">
+                        <h3 class="chosen-reg-title">@Model.ChosenRegulation.Title</h3>
+                        @*Найти аналог для utext*@
+                        <div class="chosen-reg-content">@Model.ChosenRegulation.Content</div>
+                        @*Найти аналог для utext*@
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+
+    <script>
+        $('#content').summernote({
+            height: 200,
+            // callbacks: {
+            //     onImageUpload: function(files) {
+            //         uploadFile(files[0]);
+            //     }
+            // }
+        });
+
+            // function uploadFile(file) {
+            //     data = new FormData();
+            //     data.append("file", file);
+            //     console.log("Загрузили");
+            //     $.ajax({
+            //         data: data,
+            //         type: "POST",
+            //         url: "http://localhost/",
+            //         cache: false,
+            //         contentType: false,
+            //         processData: false,
+            //         success: function(url) {
+            //             $('#summernote').summernote("insertImage", url);
+            //         }
+            //     });
+            //     console.log("Отправили");
+            // }
+    </script>
+</div>
