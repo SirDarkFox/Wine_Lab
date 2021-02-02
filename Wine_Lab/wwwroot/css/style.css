@@ -480,7 +480,7 @@ a {
 /**********/
 .product {
     height: 800px;
-    background-image: url(../../static/img/wine1.jpg);
+    background-image: url(../img/wine1.jpg);
     background-size: cover;
     background-attachment: fixed;
 }

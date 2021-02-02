@@ -36,7 +36,7 @@ namespace Wine_Lab
                 .AddEntityFrameworkStores<AppDbContext>()
                 .AddDefaultTokenProviders();
 
-            services.AddScoped<IUser, UserService>();
+            //services.AddScoped<IUser, UserService>();
             services.AddScoped<IArticle, ArticleService>();
             services.AddScoped<IRegulation, RegulationService>();
 
@@ -45,6 +45,12 @@ namespace Wine_Lab
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
+            using (var serviceScope = app.ApplicationServices.GetService<IServiceScopeFactory>().CreateScope())
+            {
+                var context = serviceScope.ServiceProvider.GetRequiredService<AppDbContext>();
+                context.Database.Migrate();
+            }
+
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
