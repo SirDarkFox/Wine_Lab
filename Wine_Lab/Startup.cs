@@ -51,6 +51,8 @@ namespace Wine_Lab
                 context.Database.Migrate();
             }
 
+            ApplicationDbInitializer.SeedUsers(userManager);
+
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
@@ -74,8 +76,6 @@ namespace Wine_Lab
                     name: "default",
                     pattern: "{controller=Home}/{action=Index}/{id?}");
             });
-
-            ApplicationDbInitializer.SeedUsers(userManager);
         }
     }
 }

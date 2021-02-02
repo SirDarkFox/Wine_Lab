@@ -44,6 +44,15 @@ namespace Wine_Lab.Data.Migrations
                         .HasFilter("[NormalizedName] IS NOT NULL");
 
                     b.ToTable("AspNetRoles");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = "20d08fb1-74ca-4e88-90db-67e11f69e9a9",
+                            ConcurrencyStamp = "82967df5-47c8-4cd8-adfa-cc603efc3c88",
+                            Name = "Admin",
+                            NormalizedName = "ADMIN"
+                        });
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>

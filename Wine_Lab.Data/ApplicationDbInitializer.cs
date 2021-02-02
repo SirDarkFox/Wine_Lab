@@ -14,10 +14,10 @@ namespace Wine_Lab.Data
             {
                 User user = new User
                 {
-                    UserName = "admin",
+                    UserName = "admin"
                 };
 
-                IdentityResult result = userManager.CreateAsync(user, "123").Result;
+                IdentityResult result = userManager.CreateAsync(user, "Admin12345").Result;
 
                 if (result.Succeeded)
                 {
