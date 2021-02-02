@@ -33,17 +33,17 @@ namespace Wine_Lab
                     Configuration.GetConnectionString("DefaultConnection")));
 
             services.AddIdentity<User, IdentityRole>()
+                .AddRoles<IdentityRole>()
                 .AddEntityFrameworkStores<AppDbContext>()
                 .AddDefaultTokenProviders();
 
-            services.AddScoped<IUser, UserService>();
             services.AddScoped<IArticle, ArticleService>();
             services.AddScoped<IRegulation, RegulationService>();
 
             services.AddControllersWithViews();
         }
 
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, UserManager<User> userManager)
         {
             if (env.IsDevelopment())
             {
@@ -68,6 +68,8 @@ namespace Wine_Lab
                     name: "default",
                     pattern: "{controller=Home}/{action=Index}/{id?}");
             });
+
+            ApplicationDbInitializer.SeedUsers(userManager);
         }
     }
 }
