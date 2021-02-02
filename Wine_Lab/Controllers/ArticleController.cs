@@ -2,8 +2,6 @@
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
@@ -38,14 +36,14 @@ namespace Wine_Lab.Controllers
             return View(model);
         }
 
-        public async Task<IActionResult> Details(int? id)
+        public async Task<IActionResult> Details(long? id)
         {
             if (id == null)
             {
                 return NotFound();
             }
 
-            var article = await _articleService.GetById((int)id);
+            var article = await _articleService.GetById((long)id);
             if (article == null)
             {
                 return NotFound();
@@ -79,13 +77,13 @@ namespace Wine_Lab.Controllers
                     {
                         Title = model.Title,
                         Content = model.Content,
-                        ImgPath = await UploadImage(model)
+                        ImgPath = await UploadImage(model.Image)
                     };
                     await _articleService.Add(article);
                     return RedirectToAction(nameof(Index));
                 }
             }
-            catch (DbUpdateException)
+            catch (DbUpdateException ex)
             {
                 //Обработка ошибки
             }
@@ -93,14 +91,14 @@ namespace Wine_Lab.Controllers
             return View(model);
         }
 
-        public async Task<IActionResult> Edit(int? id)
+        public async Task<IActionResult> Edit(long? id)
         {
             if (id == null)
             {
                 return NotFound();
             }
 
-            var article = await _articleService.GetById((int)id);
+            var article = await _articleService.GetById((long)id);
             if (article == null)
             {
                 return NotFound();
@@ -117,60 +115,83 @@ namespace Wine_Lab.Controllers
             return View(model);
         }
 
-        //Остановился тут
-
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int? id)
-        {
-            if (id == null)
-            {
-                return NotFound();
-            }
-            try
-            {
-                return RedirectToAction(nameof(Index));
-            }
-            catch
-            {
-                return View();
-            }
-        }
-
-        public ActionResult Delete(int id)
-        {
-            return View();
-        }
-
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Delete(int id, IFormCollection collection)
+        public async Task<IActionResult> Edit(long id, [Bind("Id, Title, Content, ImgPath, Image")] ArticleViewModel model)
         {
             try
             {
-                return RedirectToAction(nameof(Index));
+                if (ModelState.IsValid)
+                {
+                    var article = await _articleService.GetById(id);
+                    if (article == null)
+                    {
+                        return NotFound();
+                    }
+
+                    if (model.Image != null)
+                    {
+                        DeleteImage(article.ImgPath);
+                        model.ImgPath = await UploadImage(model.Image);
+                    }
+
+                    article.Title = model.Title;
+                    article.Content = model.Content;
+                    article.ImgPath = model.ImgPath;
+                    await _articleService.Edit(article);
+
+                    return RedirectToAction(nameof(Index));
+                }
             }
-            catch
+            catch (DbUpdateException ex)
             {
-                return View();
+                //Обработка ошибки
             }
+
+            return View(model);
         }
 
-        private async Task<string> UploadImage(ArticleViewModel model)
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Delete(long id)
         {
-            if (model.Image != null)
+            try
             {
-                var uploadsFolder = _hostingEnvironment.WebRootPath + "\\images\\books";
-                var fileUrl = model.Image.FileName;
-                var filePath = Path.Combine(uploadsFolder, fileUrl);
+                await _articleService.Delete(id);
+                return RedirectToAction(nameof(Index));
+            }
+            catch (DbUpdateException ex)
+            {
+                //Обработка ошибки
+            }
+
+            return RedirectToAction(nameof(Index));
+        }
+
+        private async Task<string> UploadImage(IFormFile image)
+        {
+            if (image != null)
+            {
+                var uploadsFolder = _hostingEnvironment.WebRootPath + "\\img\\articles";
+                var imageUrl = image.FileName;
+                var filePath = Path.Combine(uploadsFolder, imageUrl);
                 var stream = new FileStream(filePath, FileMode.Create);
-                await model.Image.CopyToAsync(stream);
+                await image.CopyToAsync(stream);
                 stream.Close();
 
-                return @"/images/books/" + fileUrl;
+                return @"/img/articles/" + imageUrl;
             }
 
             return "/img/articles/noimage.png";
+        }
+
+        private void DeleteImage(string imgPath)
+        {
+            var filePath = Path.Combine(_hostingEnvironment.WebRootPath, imgPath);
+            if (System.IO.File.Exists(filePath))
+            {
+                System.IO.File.Delete(filePath);
+            }
         }
     }
 }
